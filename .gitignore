@@ -54,3 +54,20 @@ Thumbs.db
 # Local configuration
 .env.local
 .env.*.local
+
+# Node.js / Next.js (Frontend)
+node_modules/
+.next/
+out/
+.cache/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# Docker
+.dockerignore
+docker-compose.override.yml

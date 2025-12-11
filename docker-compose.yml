@@ -1,0 +1,57 @@
+# Docker Compose for Phase 2 Local Development
+# Runs frontend (Next.js) and backend (FastAPI) together
+
+version: '3.8'
+
+services:
+  # Backend API (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: todo-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - JWT_ALGORITHM=HS256
+      - CORS_ORIGINS=["http://localhost:3000"]
+      - DEBUG=true
+    volumes:
+      - ./backend:/app
+      - /app/.venv  # Exclude virtual environment
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - todo-network
+    restart: unless-stopped
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: todo-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=http://localhost:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Exclude node_modules
+      - /app/.next         # Exclude Next.js build cache
+    command: npm run dev
+    networks:
+      - todo-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  todo-network:
+    driver: bridge
+
+# Note: Database (Neon PostgreSQL) is hosted externally
+# No local PostgreSQL container needed - use Neon cloud service
