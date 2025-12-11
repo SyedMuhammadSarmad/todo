@@ -1,0 +1,176 @@
+# Spec-Kit Plus Configuration
+# Todo App - Hackathon II: Evolution from Console to Cloud
+
+name: todo-hackathon
+version: "2.0"
+description: "Multi-phase todo application evolving from CLI to cloud-native AI chatbot"
+
+# Directory structure configuration
+structure:
+  specs_dir: specs
+  features_dir: specs/features
+  api_dir: specs/api
+  database_dir: specs/database
+  ui_dir: specs/ui
+  history_dir: history
+  prompts_dir: history/prompts
+  adr_dir: history/adr
+
+# Phase definitions for the hackathon
+phases:
+  - name: phase-1-console
+    description: "In-Memory Python Console App"
+    status: completed
+    features: [task-crud-cli]
+    branch: 001-todo-console-app
+    tag: v1.0-phase1
+    due_date: "2025-12-07"
+    points: 100
+
+  - name: phase-2-web
+    description: "Full-Stack Web Application"
+    status: active
+    features: [task-crud-web, authentication]
+    branch: 002-phase-2-web
+    tag: v2.0-phase2
+    due_date: "2025-12-14"
+    points: 150
+    tech_stack:
+      frontend: Next.js 16+ (App Router)
+      backend: FastAPI
+      database: Neon Serverless PostgreSQL
+      orm: SQLModel
+      auth: Better Auth
+
+  - name: phase-3-chatbot
+    description: "AI-Powered Todo Chatbot"
+    status: planned
+    features: [task-crud-web, authentication, chatbot-mcp]
+    branch: 003-phase-3-chatbot
+    tag: v3.0-phase3
+    due_date: "2025-12-21"
+    points: 200
+    tech_stack:
+      frontend: OpenAI ChatKit
+      backend: OpenAI Agents SDK + Official MCP SDK
+
+  - name: phase-4-k8s
+    description: "Local Kubernetes Deployment"
+    status: planned
+    features: [task-crud-web, authentication, chatbot-mcp, k8s-deployment]
+    branch: 004-phase-4-k8s
+    tag: v4.0-phase4
+    due_date: "2026-01-04"
+    points: 250
+    tech_stack:
+      containerization: Docker
+      orchestration: Kubernetes (Minikube)
+      package_manager: Helm
+      aiops: kubectl-ai, kagent
+
+  - name: phase-5-cloud
+    description: "Advanced Cloud Deployment"
+    status: planned
+    features: [task-crud-web, authentication, chatbot-mcp, k8s-deployment, event-driven, cloud-native]
+    branch: 005-phase-5-cloud
+    tag: v5.0-phase5
+    due_date: "2026-01-18"
+    points: 300
+    tech_stack:
+      cloud: DigitalOcean DOKS
+      messaging: Kafka (Redpanda Cloud)
+      runtime: Dapr
+      advanced_features: recurring-tasks, reminders, notifications
+
+# Current active phase
+current_phase: phase-2-web
+
+# Feature definitions
+features:
+  task-crud-cli:
+    name: "Task CRUD (Console)"
+    level: basic
+    operations: [add, delete, update, view, complete]
+
+  task-crud-web:
+    name: "Task CRUD (Web)"
+    level: basic
+    operations: [add, delete, update, view, complete]
+    api_endpoints: 6
+
+  authentication:
+    name: "User Authentication"
+    level: basic
+    type: Better Auth with JWT
+    endpoints: [signup, signin, signout]
+
+  chatbot-mcp:
+    name: "AI Chatbot with MCP"
+    level: intermediate
+    tools: [add_task, list_tasks, complete_task, delete_task, update_task]
+
+  k8s-deployment:
+    name: "Kubernetes Deployment"
+    level: advanced
+    platforms: [minikube, digitalocean]
+
+  event-driven:
+    name: "Event-Driven Architecture"
+    level: advanced
+    components: [kafka, dapr]
+
+  cloud-native:
+    name: "Cloud-Native Features"
+    level: advanced
+    features: [recurring-tasks, reminders, notifications, real-time-sync]
+
+# Repository configuration
+repository:
+  type: monorepo
+  structure: evolutionary
+  archive_completed_phases: true
+  git_strategy:
+    - Feature branches for each phase
+    - Tag on phase completion
+    - Merge to main after submission
+
+# Development workflow
+workflow:
+  methodology: Spec-Driven Development (SDD)
+  tools:
+    - Claude Code
+    - Spec-Kit Plus
+  cycle:
+    - specify: "/sp.specify"
+    - plan: "/sp.plan"
+    - tasks: "/sp.tasks"
+    - implement: "/sp.implement"
+    - record: "PHR (automatic)"
+
+# Bonus features tracking
+bonus_features:
+  reusable_intelligence:
+    description: "Create and use reusable intelligence via Claude Code Subagents and Agent Skills"
+    points: 200
+    enabled: false
+
+  cloud_native_blueprints:
+    description: "Create and use Cloud-Native Blueprints via Agent Skills"
+    points: 200
+    enabled: false
+
+  multi_language:
+    description: "Multi-language Support - Urdu in chatbot"
+    points: 100
+    enabled: false
+
+  voice_commands:
+    description: "Voice Commands - Add voice input for todo commands"
+    points: 200
+    enabled: false
+
+# Total possible points
+points:
+  base: 1000
+  bonus: 700
+  total: 1700

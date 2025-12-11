@@ -196,22 +196,133 @@ If ALL true, suggest:
 
 Wait for consent; never auto-create ADRs. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
 
-## Basic Project Structure
+## Monorepo Structure & Navigation
 
-- `.specify/memory/constitution.md` — Project principles
-- `specs/<feature>/spec.md` — Feature requirements
-- `specs/<feature>/plan.md` — Architecture decisions
-- `specs/<feature>/tasks.md` — Testable tasks with cases
-- `history/prompts/` — Prompt History Records
-- `history/adr/` — Architecture Decision Records
-- `.specify/` — SpecKit Plus templates and scripts
+### Root Structure (Phase 2+)
+
+This is a **monorepo** containing both frontend and backend applications that evolve through all phases.
+
+```
+/mnt/d/AI-agents/2/
+├── .spec-kit/              # Spec-Kit Plus configuration
+│   └── config.yaml         # Phase definitions and project config
+│
+├── .specify/               # SpecKit templates and scripts
+│   └── memory/
+│       └── constitution.md # Project principles (v2.0.0)
+│
+├── specs/                  # Specifications organized by phase
+│   ├── phase-1/            # Phase 1 specs (archived)
+│   └── phase-2/            # Phase 2 specs (active)
+│       ├── overview.md     # Phase 2 overview and status
+│       ├── architecture.md # System architecture (to be created via /sp.plan)
+│       ├── features/       # Feature specifications
+│       ├── api/            # API endpoint specifications
+│       ├── database/       # Database schema specifications
+│       └── ui/             # UI component specifications
+│
+├── history/                # Project history
+│   ├── prompts/            # Prompt History Records
+│   │   ├── constitution/
+│   │   ├── phase-1/
+│   │   └── phase-2/        # Current phase PHRs
+│   └── adr/                # Architecture Decision Records
+│
+├── archived/               # Completed phases (preserved)
+│   └── phase-1-console/    # Phase 1: Console app
+│       ├── src/
+│       ├── specs/
+│       └── README.md
+│
+├── frontend/               # Next.js application (Phase 2+)
+│   ├── CLAUDE.md           # Frontend-specific guidelines
+│   └── [to be created]
+│
+├── backend/                # FastAPI application (Phase 2+)
+│   ├── CLAUDE.md           # Backend-specific guidelines
+│   └── [to be created]
+│
+├── docker-compose.yml      # Local development environment
+├── CLAUDE.md               # This file - Root navigation
+└── README.md               # Project documentation
+```
+
+### How to Navigate the Monorepo
+
+**When working on frontend**:
+1. Read `frontend/CLAUDE.md` for Next.js patterns and conventions
+2. Reference `specs/phase-2/ui/` for UI specifications
+3. Reference `specs/phase-2/features/` for user stories
+
+**When working on backend**:
+1. Read `backend/CLAUDE.md` for FastAPI patterns and conventions
+2. Reference `specs/phase-2/api/` for API specifications
+3. Reference `specs/phase-2/database/` for data models
+
+**When planning features**:
+1. Read `specs/phase-2/overview.md` for current status
+2. Create feature specs in `specs/phase-2/features/`
+3. Run `/sp.plan` to generate architecture decisions
+4. Run `/sp.tasks` to create implementation tasks
+
+### Referencing Specs in Claude Code
+
+Use the `@` syntax to reference specifications:
+
+```bash
+# Reference a feature spec
+@specs/phase-2/features/task-crud.md implement the create task feature
+
+# Reference API spec
+@specs/phase-2/api/rest-endpoints.md implement the GET /api/tasks endpoint
+
+# Reference database schema
+@specs/phase-2/database/schema.md add due_date field to tasks
+
+# Reference UI spec
+@specs/phase-2/ui/components.md create the TaskList component
+
+# Reference frontend guidelines
+@frontend/CLAUDE.md follow the component patterns
+
+# Reference backend guidelines
+@backend/CLAUDE.md follow the API conventions
+```
+
+### Layered CLAUDE.md Files
+
+This project uses **three levels** of CLAUDE.md guidance:
+
+1. **Root CLAUDE.md** (this file): Project-wide navigation, workflow, how to use specs
+2. **frontend/CLAUDE.md**: Next.js patterns, component structure, API client usage
+3. **backend/CLAUDE.md**: FastAPI patterns, database operations, API conventions
+
+Always read the relevant CLAUDE.md before implementing in that directory.
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
 
-## Active Technologies
-- Python 3.13+ + Standard library only (no external packages for Phase 1) (001-todo-console-app)
-- In-memory (Python list/dictionary) (001-todo-console-app)
+## Active Technologies (Phase 2)
+### Frontend
+- Next.js 16+ (App Router)
+- Better Auth (JWT authentication)
+- Tailwind CSS
+
+### Backend
+- Python 3.13+ with FastAPI
+- SQLModel (ORM)
+- Neon Serverless PostgreSQL
+
+### Development
+- UV (Python package manager)
+- npm/pnpm (Node.js package manager)
+- Docker + docker-compose
+- Claude Code + Spec-Kit Plus
 
 ## Recent Changes
-- 001-todo-console-app: Added Python 3.13+ + Standard library only (no external packages for Phase 1)
+- 2025-12-11: Updated constitution to v2.0.0 for Phase 2 (Full-Stack Web Application)
+  - Added database persistence with Neon PostgreSQL
+  - Added multi-user authentication with Better Auth + JWT
+  - Transitioned from CLI to web application architecture
+  - Established monorepo structure (frontend/ + backend/)
+- 001-todo-console-app: Phase 1 completed (Python console app with in-memory storage)
