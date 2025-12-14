@@ -69,7 +69,7 @@ This document captures the research findings and design decisions made during th
 
 ### 3. Next.js Form Handling and Validation
 
-**Context**: Next.js App Router (v15+) supports Server Actions, but forms can also use client-side libraries like React Hook Form.
+**Context**: Next.js App Router (v16+) supports Server Actions, but forms can also use client-side libraries like React Hook Form.
 
 **Options Considered**:
 - Server Actions with server-side validation
@@ -608,7 +608,7 @@ try {
 - **Validation**: Pydantic (via SQLModel)
 
 ### Frontend
-- **Framework**: Next.js 15+ (App Router)
+- **Framework**: Next.js 16+ (App Router)
 - **Form Handling**: React Hook Form 7.x
 - **Validation**: Zod 3.x
 - **Styling**: Tailwind CSS 3.x

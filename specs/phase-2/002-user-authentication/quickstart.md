@@ -545,6 +545,6 @@ npm run dev
 ## Related Documentation
 
 - **Feature Spec**: `specs/phase-2/features/authentication.md`
-- **Research**: `specs/002-user-authentication/research.md`
-- **Data Model**: `specs/002-user-authentication/data-model.md`
-- **API Contract**: `specs/002-user-authentication/contracts/auth-api.md`
+- **Research**: `specs/phase-2/002-user-authentication/research.md`
+- **Data Model**: `specs/phase-2/002-user-authentication/data-model.md`
+- **API Contract**: `specs/phase-2/002-user-authentication/contracts/auth-api.md`
