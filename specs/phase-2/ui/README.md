@@ -144,5 +144,9 @@ async function TasksPage() {
 
 ---
 
-**Status**: 📝 To be created via `/sp.specify`
+**Status**: 📝 To be created via `/sp.plan`
 **Related**: See `../features/` for user flows, `../api/` for data models
+
+**Workflow**:
+1. ✅ `/sp.specify` creates feature specs in `../features/` (WHAT & WHY)
+2. ⏭️ `/sp.plan` generates UI component/page specs in this folder (HOW)

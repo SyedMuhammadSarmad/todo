@@ -73,5 +73,9 @@ List all tasks for the authenticated user.
 
 ---
 
-**Status**: 📝 To be created via `/sp.specify`
+**Status**: 📝 To be created via `/sp.plan`
 **Related**: See `../features/` for user stories, `../database/` for data models
+
+**Workflow**:
+1. ✅ `/sp.specify` creates feature specs in `../features/` (WHAT & WHY)
+2. ⏭️ `/sp.plan` generates API specs in this folder (HOW)
