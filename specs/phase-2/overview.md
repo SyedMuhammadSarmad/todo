@@ -44,37 +44,86 @@ Transform the Phase 1 console application into a full-stack web application:
 
 ### Additional Phase 2 Requirements
 
-- [ ] **User Authentication**
-  - [ ] Signup with email/password
-  - [ ] Signin with JWT tokens
-  - [ ] Signout functionality
+- [x] **User Authentication** (Planning Complete - Ready for Implementation)
+  - [x] Signup with email/password
+  - [x] Signin with JWT tokens
+  - [x] Signout functionality
+  - [x] Session management
+  - Status: ✅ Planning complete, ready for `/sp.tasks`
 
-- [ ] **Multi-User Support**
-  - [ ] Each user sees only their own tasks
-  - [ ] User isolation enforced at database level
-  - [ ] JWT verification on all API endpoints
+- [x] **Task CRUD Operations** (Planning Complete - Ready for Implementation)
+  - [x] Create task (web form with title and description)
+  - [x] View all tasks (responsive list)
+  - [x] Update task (edit form)
+  - [x] Delete task (with confirmation)
+  - [x] Toggle completion status
+  - Status: ✅ Planning complete, ready for `/sp.tasks`
+
+- [x] **Multi-User Support** (Planning Complete - Integrated with Both Features)
+  - [x] JWT verification middleware on all task endpoints
+  - [x] Task queries filtered by authenticated `user_id`
+  - [x] Database foreign key: `tasks.user_id → users.id`
+  - Status: ✅ Designed as part of task-crud planning
+
+**Cross-Cutting Concern**:
+- **Authentication provides**: `user_id` in JWT token, verification middleware
+- **Task CRUD must use**: Filter all queries by authenticated `user_id`
+- **Multi-user isolation complete**: Only when both features are implemented
 
 ## Specifications
 
 Organized by type in subdirectories:
 
-- **features/**: Feature specifications with user stories
-  - `task-crud.md` - CRUD operations for web
-  - `authentication.md` - Better Auth specification
+- **features/**: Feature specifications with user stories (WHAT & WHY)
+  - ✅ `task-crud.md` - CRUD operations for web (Created 2025-12-14, validated, **planning complete**)
+  - ✅ `authentication.md` - User authentication (Created 2025-12-14, validated, **planning complete**)
+  - 📋 Checklists: `checklists/authentication-requirements.md`, `checklists/task-crud-requirements.md`
 
-- **api/**: API endpoint specifications
-  - `rest-endpoints.md` - Complete API contract
+- **001-task-crud/**: Task CRUD planning artifacts (Complete)
+  - ✅ `plan.md` - Implementation plan summary
+  - ✅ `research.md` - 16 design decisions documented
+  - ✅ `data-model.md` - Task entity with user_id foreign key
+  - ✅ `quickstart.md` - Step-by-step implementation guide
+  - ✅ `contracts/task-api.md` - Complete API specification (5 endpoints)
 
-- **database/**: Database specifications
-  - `schema.md` - PostgreSQL schema (users, tasks)
+- **002-user-authentication/**: Authentication planning artifacts (Complete)
+  - ✅ `plan.md` - Implementation plan summary
+  - ✅ `research.md` - 16 design decisions documented
+  - ✅ `data-model.md` - User & Session entities
+  - ✅ `quickstart.md` - Step-by-step implementation guide
+  - ✅ `contracts/auth-api.md` - Complete API specification
 
-- **ui/**: UI specifications
-  - `components.md` - Reusable components
-  - `pages.md` - Page layouts and routing
+- **api/**: API endpoint specifications (HOW - Technical Design)
+  - ✅ `auth-endpoints.md` - Authentication endpoints (Complete)
+  - ✅ `task-endpoints.md` - Task CRUD endpoints (Complete)
+  - Status: Both features planned and ready for implementation
+
+- **database/**: Database specifications (HOW - Technical Design)
+  - ✅ `auth-schema.md` - Users and sessions tables (Complete)
+  - ✅ `task-schema.md` - Tasks table with user_id FK (Complete)
+  - Status: Both features planned and ready for implementation
+
+- **ui/**: UI specifications (HOW - Technical Design)
+  - ✅ `auth-pages.md` - Signup/signin/signout pages (Complete)
+  - ✅ `task-pages.md` - Task dashboard and components (Complete)
+  - Status: Both features planned and ready for implementation
 
 ## Architecture Decisions
 
-See `architecture.md` for detailed system design decisions.
+📝 `architecture.md` - System-wide architecture (to be consolidated from feature plans)
+
+Architectural Decision Records (ADRs) suggested:
+
+**Authentication**:
+- `/sp.adr stateless-jwt-authentication`
+- `/sp.adr better-auth-for-frontend`
+- `/sp.adr bcrypt-password-hashing`
+
+**Task CRUD**:
+- `/sp.adr task-crud-api-design` (REST patterns, URL structure, toggle endpoint)
+- `/sp.adr task-user-isolation-strategy` (Multi-tenancy approach)
+
+ADRs will be stored in `history/adr/` when created.
 
 ## Success Criteria
 
@@ -115,6 +164,9 @@ The Phase 2 web application will serve as the foundation for the AI-powered chat
 
 ---
 
-**Last Updated**: 2025-12-11
-**Git Branch**: `002-phase-2-web`
+**Last Updated**: 2025-12-14
+**Current Branch**: `001-task-crud`
+**Base Branch**: `main`
+**Planning Status**: ✅ BOTH features planned (authentication + task-crud)
+**Next Step**: Run `/sp.tasks` on each feature to generate implementation tasks
 **Git Tag**: `v2.0-phase2` (on completion)
