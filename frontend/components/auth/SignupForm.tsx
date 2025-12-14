@@ -5,21 +5,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { signupSchema, type SignupInput } from "@/lib/validations/auth";
-import { signup } from "@/lib/api/auth";
-import { useAuth } from "@/hooks/useAuth";
+import { signupSchema, type SignupFormData } from "@/lib/validations/auth";
+import { signUp } from "@/lib/auth-client";
 
+/**
+ * SignupForm with Better Auth integration
+ * User Story 1: Create Account (Signup)
+ */
 export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setUser, setToken } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<SignupInput>({
+  } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });
 
@@ -46,36 +48,38 @@ export function SignupForm() {
 
   const passwordStrength = getPasswordStrength(password || "");
 
-  const onSubmit = async (data: SignupInput) => {
+  const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
 
     try {
-      // T041: Call signup API
-      const response = await signup(data);
+      // Use Better Auth's signUp function
+      const result = await signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.email.split("@")[0], // Use email prefix as name
+      });
 
-      // T042: Store JWT token
-      setToken(response.token);
-
-      // T043: Update AuthContext
-      setUser(response.user);
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
 
       // Show success message
       toast.success("Account created successfully!");
 
-      // T044: Redirect to dashboard
+      // Redirect to dashboard - Better Auth handles session automatically
       router.push("/dashboard");
     } catch (error: any) {
-      // T045: Display error for duplicate email (409)
-      if (error.message.includes("already exists")) {
+      // Handle errors
+      const errorMessage = error.message || "Failed to create account";
+
+      if (errorMessage.includes("already exists") || errorMessage.includes("duplicate")) {
         toast.error("An account with this email already exists");
-      }
-      // T046: Display error for validation failures (400)
-      else if (error.message.includes("validation")) {
-        toast.error("Please check your input and try again");
-      }
-      // Generic error
-      else {
-        toast.error(error.message || "Failed to create account");
+      } else if (errorMessage.includes("password")) {
+        toast.error("Password must be at least 8 characters with a letter and number");
+      } else if (errorMessage.includes("email")) {
+        toast.error("Please enter a valid email address");
+      } else {
+        toast.error(errorMessage);
       }
     } finally {
       setIsLoading(false);
@@ -139,6 +143,25 @@ export function SignupForm() {
               {passwordStrength.strength}
             </span>
           </div>
+        )}
+      </div>
+
+      {/* Confirm Password field - T037 */}
+      <div>
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+          Confirm Password
+        </label>
+        <input
+          id="confirmPassword"
+          type="password"
+          {...register("confirmPassword")}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Re-enter your password"
+          disabled={isLoading}
+        />
+        {/* T039: Display inline validation errors */}
+        {errors.confirmPassword && (
+          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
         )}
       </div>
 

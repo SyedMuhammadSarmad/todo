@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "Todo App",
-  description: "Multi-user todo application with authentication",
+  title: "Todo App - Better Auth",
+  description: "Multi-user todo application with Better Auth authentication",
 };
 
+/**
+ * Root Layout with Better Auth integration
+ * Better Auth handles session management automatically - no provider needed
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -16,10 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          {children}
-          <Toaster position="top-right" />
-        </AuthProvider>
+        {children}
+        <Toaster position="top-right" />
       </body>
     </html>
   );

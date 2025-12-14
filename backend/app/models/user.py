@@ -46,6 +46,13 @@ class UserRead(SQLModel):
     last_signin_at: Optional[datetime] = None
 
 
+class SigninRequest(SQLModel):
+    """Schema for signin request."""
+
+    email: EmailStr = Field(max_length=255)
+    password: str = Field(min_length=1)
+
+
 class AuthResponse(SQLModel):
     """Schema for authentication response with user and token."""
 
