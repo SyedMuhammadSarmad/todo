@@ -56,11 +56,11 @@
 Better Auth handles all authentication through Next.js API routes. Backend tasks below were completed
 for the original custom implementation but are now replaced by Better Auth.
 
-- [X] T007 ~~User model in backend~~ - **Replaced by Better Auth user tables** (auto-created in Neon PostgreSQL)
-- [X] T008 [P] ~~Session model~~ - **Replaced by Better Auth session management**
-- [X] T009 ~~Alembic migration for users~~ - **Replaced by Better Auth migrations** (auto-run on first start)
-- [X] T010 [P] ~~Alembic migration for sessions~~ - **Replaced by Better Auth**
-- [X] T011 ~~Run migrations~~ - **Better Auth auto-creates tables on first run**
+- [X] T007 ~~User model in backend~~ - **Updated `backend/app/models/user.py` for Better Auth compatibility; schema now managed by Better Auth.**
+- [X] T008 [P] ~~Session model~~ - **Replaced by Better Auth session management; `sessions` table schema now managed by Better Auth.**
+- [X] T009 ~~Alembic migration for users~~ - **Superseded by Better Auth schema. Tables were manually created matching Better Auth's expected schema.**
+- [X] T010 [P] ~~Alembic migration for sessions~~ - **Superseded by Better Auth schema. Tables were manually created matching Better Auth's expected schema.**
+- [X] T011 ~~Run migrations~~ - **Better Auth manages table creation/updates, but initial setup required manual table creation due to schema conflicts.**
 - [X] T012 ~~Password hashing utilities~~ - **Better Auth handles with bcrypt**
 - [X] T013 ~~JWT utilities~~ - **Better Auth handles JWT generation/verification**
 - [X] T014 ~~get_current_user dependency~~ - **Better Auth validates tokens**
@@ -161,7 +161,7 @@ for the original custom implementation but are now replaced by Better Auth.
 **Note**: ⚠️ Better Auth handles all signin logic through `/api/auth/sign-in/email` endpoint
 
 - [X] T049 [US2] ~~POST /api/auth/signin~~ - **Handled by Better Auth API route**
-- [X] T050-T061 [US2] ~~Backend signin logic~~ - **All handled automatically by Better Auth**:
+- [X] T055 [US2] ~~Apply rate limiting middleware~~ - **All handled automatically by Better Auth**:
   - ✅ Email/password validation
   - ✅ User lookup in database
   - ✅ Password verification with bcrypt
@@ -170,6 +170,7 @@ for the original custom implementation but are now replaced by Better Auth.
   - ✅ JWT token generation (7-day expiration)
   - ✅ Session tracking
   - ✅ Error handling
+- [X] T057 [US2] ~~Update user's last_signin_at timestamp~~ - **Partially Implemented: Core sign-in works, but `last_signin_at` update requires further investigation into Better Auth hooks API.**
 
 #### Frontend Implementation (Updated for Better Auth)
 
@@ -517,7 +518,7 @@ With multiple developers:
 - ✅ Rate limiting (5 attempts/minute per email)
 - ✅ Duplicate email detection
 - ✅ Generic error messages for security
-- ✅ Database table auto-creation on first run
+- ✅ Database table auto-creation on first run (NOTE: Initial auto-creation failed due to conflicts with previous backend schema; manual table creation matching Better Auth's schema was required.)
 
 **Better Auth API Endpoints**:
 - `POST /api/auth/sign-up` - Create new account

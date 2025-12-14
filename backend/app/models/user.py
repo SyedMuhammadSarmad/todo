@@ -17,6 +17,9 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     last_signin_at: Optional[datetime] = None
+    name: Optional[str] = Field(default=None, max_length=255)
+    email_verified: bool = Field(default=False)
+    image: Optional[str] = Field(default=None, max_length=255)
 
 
 class UserCreate(SQLModel):
@@ -44,6 +47,9 @@ class UserRead(SQLModel):
     created_at: datetime
     updated_at: datetime
     last_signin_at: Optional[datetime] = None
+    name: Optional[str] = None
+    email_verified: bool = False # Ensure this is compatible with better-auth's default
+    image: Optional[str] = None
 
 
 class SigninRequest(SQLModel):
