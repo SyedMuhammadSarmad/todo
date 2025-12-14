@@ -19,7 +19,7 @@ Before starting, ensure you have:
 - [x] User model/table exists with `id`, `email`, `name` fields
 - [x] Python 3.13+ with UV package manager
 - [x] Node.js 18+ with npm/pnpm
-- [x] Next.js 15+ project initialized
+- [x] Next.js 16+ project initialized
 - [x] FastAPI project initialized
 
 ## Implementation Steps
