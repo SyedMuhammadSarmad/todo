@@ -1,9 +1,12 @@
 """User model for authentication."""
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from pydantic import field_validator, EmailStr
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 import re
+
+if TYPE_CHECKING:
+    from .task import Task
 
 
 class User(SQLModel, table=True):
@@ -20,6 +23,9 @@ class User(SQLModel, table=True):
     name: Optional[str] = Field(default=None, max_length=255)
     email_verified: bool = Field(default=False)
     image: Optional[str] = Field(default=None, max_length=255)
+
+    # Relationship to tasks (one-to-many)
+    tasks: list["Task"] = Relationship(back_populates="user")
 
 
 class UserCreate(SQLModel):

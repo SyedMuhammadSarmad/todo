@@ -38,13 +38,13 @@ export function SignupForm() {
     const isLongEnough = pwd.length >= 8;
 
     if (isLongEnough && hasLetter && hasNumber && hasSpecial) {
-      return { strength: "Strong", color: "text-green-600" };
+      return { strength: "Strong", color: "text-green-600 dark:text-green-400" };
     } else if (isLongEnough && hasLetter && hasNumber) {
-      return { strength: "Medium", color: "text-yellow-600" };
+      return { strength: "Medium", color: "text-yellow-600 dark:text-yellow-400" };
     } else if (pwd.length >= 6) {
-      return { strength: "Weak", color: "text-red-600" };
+      return { strength: "Weak", color: "text-red-600 dark:text-red-400" };
     }
-    return { strength: "Very Weak", color: "text-red-600" };
+    return { strength: "Very Weak", color: "text-red-600 dark:text-red-400" };
   };
 
   const passwordStrength = getPasswordStrength(password || "");
@@ -73,8 +73,8 @@ export function SignupForm() {
       // Show success message
       toast.success("Account created successfully!");
 
-      // Redirect to dashboard - Better Auth handles session automatically
-      router.push("/dashboard");
+      // Redirect to tasks - Better Auth handles session automatically
+      router.push("/tasks");
     } catch (error: any) {
       // Log signup failure
       authLogger.signupFailure(data.email, error);
@@ -105,14 +105,14 @@ export function SignupForm() {
     >
       {/* Email field - T037 */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Email
         </label>
         <input
           id="email"
           type="email"
           {...register("email")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors"
           placeholder="you@example.com"
           disabled={isLoading}
           aria-required="true"
@@ -122,7 +122,7 @@ export function SignupForm() {
         />
         {/* T039: Display inline validation errors */}
         {errors.email && (
-          <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+          <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
             {errors.email.message}
           </p>
         )}
@@ -130,14 +130,14 @@ export function SignupForm() {
 
       {/* Password field - T037 */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Password
         </label>
         <input
           id="password"
           type="password"
           {...register("password")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors"
           placeholder="Min 8 characters, 1 letter, 1 number"
           disabled={isLoading}
           aria-required="true"
@@ -147,7 +147,7 @@ export function SignupForm() {
         />
         {/* T039: Display inline validation errors */}
         {errors.password && (
-          <p id="password-error" className="mt-1 text-sm text-red-600" role="alert">
+          <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
             {errors.password.message}
           </p>
         )}
@@ -160,14 +160,14 @@ export function SignupForm() {
             role="status"
             aria-live="polite"
           >
-            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all ${
                   passwordStrength.strength === "Strong"
-                    ? "bg-green-600 w-full"
+                    ? "bg-green-600 dark:bg-green-500 w-full"
                     : passwordStrength.strength === "Medium"
-                    ? "bg-yellow-600 w-2/3"
-                    : "bg-red-600 w-1/3"
+                    ? "bg-yellow-600 dark:bg-yellow-500 w-2/3"
+                    : "bg-red-600 dark:bg-red-500 w-1/3"
                 }`}
                 role="progressbar"
                 aria-valuenow={
@@ -190,14 +190,14 @@ export function SignupForm() {
 
       {/* Confirm Password field - T037 */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Confirm Password
         </label>
         <input
           id="confirmPassword"
           type="password"
           {...register("confirmPassword")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors"
           placeholder="Re-enter your password"
           disabled={isLoading}
           aria-required="true"
@@ -207,7 +207,7 @@ export function SignupForm() {
         />
         {/* T039: Display inline validation errors */}
         {errors.confirmPassword && (
-          <p id="confirmPassword-error" className="mt-1 text-sm text-red-600" role="alert">
+          <p id="confirmPassword-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
             {errors.confirmPassword.message}
           </p>
         )}
@@ -217,16 +217,16 @@ export function SignupForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-blue-600 dark:bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 dark:hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label={isLoading ? "Creating your account" : "Sign up for a new account"}
       >
         {isLoading ? "Creating account..." : "Sign up"}
       </button>
 
       {/* Link to signin */}
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600 dark:text-gray-400">
         Already have an account?{" "}
-        <a href="/signin" className="text-blue-600 hover:text-blue-700 font-medium">
+        <a href="/signin" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
           Sign in
         </a>
       </p>

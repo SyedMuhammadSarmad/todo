@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
 # Get JWT configuration from environment
-JWT_SECRET = os.getenv("JWT_SECRET", "change-this-secret-key")
+# Prioritize BETTER_AUTH_SECRET as it is used by the frontend to sign tokens
+JWT_SECRET = os.getenv("BETTER_AUTH_SECRET") or os.getenv("JWT_SECRET", "change-this-secret-key")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRATION_DAYS = int(os.getenv("JWT_EXPIRATION_DAYS", "7"))
 
@@ -50,10 +51,10 @@ def verify_token(token: str) -> Optional[Dict[str, Any]]:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return payload
     except jwt.ExpiredSignatureError:
-        # Token has expired
         return None
-    except jwt.InvalidTokenError:
-        # Token is invalid
+    except jwt.InvalidTokenError as e:
+        return None
+    except Exception as e:
         return None
 
 

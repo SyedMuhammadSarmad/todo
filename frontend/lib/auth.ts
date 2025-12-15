@@ -121,7 +121,7 @@ export const auth = betterAuth({
   rateLimit: {
     enabled: true,
     window: 60, // 1 minute
-    max: 5, // 5 attempts per minute
+    max: 100, // Increased from 5 to 100 to prevent session polling issues
   },
 });
 
