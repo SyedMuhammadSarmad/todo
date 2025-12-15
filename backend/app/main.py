@@ -1,9 +1,12 @@
 """FastAPI main application."""
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from .routers import auth
+from .routers import tasks
 
 # Create FastAPI application
 app = FastAPI(
@@ -18,13 +21,13 @@ cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_credentials=True,
+    allow_credentials=True,  # Required for Better Auth cookies
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Register routers
-app.include_router(auth.router)
+app.include_router(tasks.router)
 
 
 @app.get("/")

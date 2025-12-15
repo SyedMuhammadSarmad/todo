@@ -78,6 +78,33 @@ export function hasControlCharacters(input: string): boolean {
 }
 
 /**
+ * Detect potential XSS patterns
+ * Returns true if suspicious patterns are found
+ */
+export function hasXSSPattern(input: string): boolean {
+  if (!input) return false;
+
+  const xssPatterns = [
+    /<script[^>]*>.*?<\/script>/gi,
+    /<iframe[^>]*>.*?<\/iframe>/gi,
+    /javascript:/gi,
+    /on\w+\s*=/gi, // Event handlers like onclick=, onload=
+    /<embed[^>]*>/gi,
+    /<object[^>]*>/gi,
+  ];
+
+  return xssPatterns.some((pattern) => pattern.test(input));
+}
+
+/**
+ * Sanitize general text (for task titles, descriptions, etc.)
+ * Alias for sanitizeTextInput for consistency with validation schemas
+ */
+export function sanitizeText(text: string, maxLength: number = 1000): string {
+  return sanitizeTextInput(text, maxLength);
+}
+
+/**
  * Sanitize and validate user input
  * Returns sanitized input or throws error if malicious
  */
