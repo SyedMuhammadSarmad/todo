@@ -10,8 +10,13 @@ dist/
 downloads/
 eggs/
 .eggs/
+# Python lib directories (but not frontend/lib)
+backend/lib/
+backend/lib64/
 lib/
 lib64/
+# Allow frontend/lib for Next.js utilities
+!frontend/lib/
 parts/
 sdist/
 var/

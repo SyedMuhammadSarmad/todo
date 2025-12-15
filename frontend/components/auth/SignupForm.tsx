@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { signupSchema, type SignupFormData } from "@/lib/validations/auth";
 import { signUp } from "@/lib/auth-client";
+import { authLogger } from "@/lib/logging/auth-logger";
 
 /**
  * SignupForm with Better Auth integration
@@ -52,6 +53,9 @@ export function SignupForm() {
     setIsLoading(true);
 
     try {
+      // Log signup attempt
+      authLogger.signupAttempt(data.email);
+
       // Use Better Auth's signUp function
       const result = await signUp.email({
         email: data.email,
@@ -63,12 +67,18 @@ export function SignupForm() {
         throw new Error(result.error.message);
       }
 
+      // Log signup success
+      authLogger.signupSuccess(data.email, result.data?.user?.id);
+
       // Show success message
       toast.success("Account created successfully!");
 
       // Redirect to dashboard - Better Auth handles session automatically
       router.push("/dashboard");
     } catch (error: any) {
+      // Log signup failure
+      authLogger.signupFailure(data.email, error);
+
       // Handle errors
       const errorMessage = error.message || "Failed to create account";
 
@@ -87,7 +97,12 @@ export function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 w-full max-w-md"
+      aria-label="Sign up form"
+      noValidate
+    >
       {/* Email field - T037 */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -100,10 +115,16 @@ export function SignupForm() {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="you@example.com"
           disabled={isLoading}
+          aria-required="true"
+          aria-invalid={errors.email ? "true" : "false"}
+          aria-describedby={errors.email ? "email-error" : undefined}
+          autoComplete="email"
         />
         {/* T039: Display inline validation errors */}
         {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
@@ -119,15 +140,26 @@ export function SignupForm() {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Min 8 characters, 1 letter, 1 number"
           disabled={isLoading}
+          aria-required="true"
+          aria-invalid={errors.password ? "true" : "false"}
+          aria-describedby={errors.password ? "password-error" : "password-strength"}
+          autoComplete="new-password"
         />
         {/* T039: Display inline validation errors */}
         {errors.password && (
-          <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+          <p id="password-error" className="mt-1 text-sm text-red-600" role="alert">
+            {errors.password.message}
+          </p>
         )}
 
         {/* T038: Password strength indicator */}
         {password && passwordStrength.strength && (
-          <div className="mt-1 flex items-center gap-2">
+          <div
+            id="password-strength"
+            className="mt-1 flex items-center gap-2"
+            role="status"
+            aria-live="polite"
+          >
             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all ${
@@ -137,6 +169,16 @@ export function SignupForm() {
                     ? "bg-yellow-600 w-2/3"
                     : "bg-red-600 w-1/3"
                 }`}
+                role="progressbar"
+                aria-valuenow={
+                  passwordStrength.strength === "Strong"
+                    ? 100
+                    : passwordStrength.strength === "Medium"
+                    ? 66
+                    : 33
+                }
+                aria-valuemin={0}
+                aria-valuemax={100}
               />
             </div>
             <span className={`text-xs font-medium ${passwordStrength.color}`}>
@@ -158,10 +200,16 @@ export function SignupForm() {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Re-enter your password"
           disabled={isLoading}
+          aria-required="true"
+          aria-invalid={errors.confirmPassword ? "true" : "false"}
+          aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+          autoComplete="new-password"
         />
         {/* T039: Display inline validation errors */}
         {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+          <p id="confirmPassword-error" className="mt-1 text-sm text-red-600" role="alert">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 
@@ -170,6 +218,7 @@ export function SignupForm() {
         type="submit"
         disabled={isLoading}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        aria-label={isLoading ? "Creating your account" : "Sign up for a new account"}
       >
         {isLoading ? "Creating account..." : "Sign up"}
       </button>
