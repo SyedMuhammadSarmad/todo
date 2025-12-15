@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { toggleTaskCompletion, deleteTask } from "@/lib/api/tasks";
+import { EditTaskForm } from "./EditTaskForm";
 import type { Task } from "@/types/task";
 
 interface TaskListProps {
@@ -16,6 +17,7 @@ interface TaskListProps {
  */
 export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
   const [loadingTaskId, setLoadingTaskId] = useState<number | null>(null);
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
 
   const handleToggleComplete = async (taskId: number) => {
     setLoadingTaskId(taskId);
@@ -60,6 +62,17 @@ export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
     }
   };
 
+  const handleEditSuccess = () => {
+    setEditingTaskId(null);
+    if (onTaskUpdated) {
+      onTaskUpdated();
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingTaskId(null);
+  };
+
   if (tasks.length === 0) {
     return (
       <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors duration-200">
@@ -76,17 +89,34 @@ export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
     );
   }
 
+  const editingTask = tasks.find((t) => t.id === editingTaskId);
+
   return (
-    <div className="space-y-3">
-      {tasks.map((task) => (
-        <div
-          key={task.id}
-          className={`group relative bg-white dark:bg-gray-800 border rounded-xl p-5 transition-all duration-200 hover:shadow-md hover:border-indigo-100 dark:hover:border-gray-600 ${
-            task.completed 
-              ? "bg-gray-50/50 dark:bg-gray-900/50 border-gray-100 dark:border-gray-800" 
-              : "border-gray-200 dark:border-gray-700"
-          } ${loadingTaskId === task.id ? "opacity-60 pointer-events-none" : ""}`}
-        >
+    <>
+      {/* Edit Modal */}
+      {editingTask && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-5">Edit Task</h2>
+            <EditTaskForm
+              task={editingTask}
+              onSuccess={handleEditSuccess}
+              onCancel={handleEditCancel}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {tasks.map((task) => (
+          <div
+            key={task.id}
+            className={`group relative bg-white dark:bg-gray-800 border rounded-xl p-5 transition-all duration-200 hover:shadow-md hover:border-indigo-100 dark:hover:border-gray-600 ${
+              task.completed
+                ? "bg-gray-50/50 dark:bg-gray-900/50 border-gray-100 dark:border-gray-800"
+                : "border-gray-200 dark:border-gray-700"
+            } ${loadingTaskId === task.id ? "opacity-60 pointer-events-none" : ""}`}
+          >
           <div className="flex items-start gap-4">
             {/* Custom Checkbox */}
             <div className="pt-1">
@@ -109,8 +139,24 @@ export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
                   >
                     {task.title}
                   </h3>
-                  
-                   {/* Delete button (visible on hover or focus) */}
+
+                   {/* Action buttons (visible on hover or focus) */}
+                   <div className="flex gap-1">
+                    <button
+                      onClick={() => setEditingTaskId(task.id)}
+                      className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg -mt-1"
+                      aria-label={`Edit task "${task.title}"`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+                      </svg>
+                    </button>
                     <button
                       onClick={() => handleDelete(task.id, task.title)}
                       className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg -mt-1 -mr-1"
@@ -129,6 +175,7 @@ export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
                         />
                       </svg>
                     </button>
+                   </div>
               </div>
 
               {task.description && (
@@ -155,7 +202,8 @@ export function TaskList({ tasks, onTaskUpdated }: TaskListProps) {
             </div>
           </div>
         </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
