@@ -538,13 +538,24 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ### Testing Checklist
 
-- [ ] Start frontend: `cd frontend && npm run dev`
-- [ ] Better Auth auto-creates user tables in Neon on first run
-- [ ] Test signup at `http://localhost:3000/signup`
-- [ ] Test signin at `http://localhost:3000/signin`
-- [ ] Test signout from dashboard
-- [ ] Test protected route redirect (access `/dashboard` when signed out)
-- [ ] Test session persistence (close/reopen browser)
+- [x] Start frontend: `cd frontend && npm run dev`
+- [x] Better Auth auto-creates user tables in Neon on first run
+- [x] Test signup at `http://localhost:3000/signup`
+- [x] Test signin at `http://localhost:3000/signin`
+- [x] Test signout from dashboard (now from `/tasks` page)
+- [x] Test protected route redirect (access `/tasks` when signed out)
+- [x] Test session persistence (close/reopen browser)
+- [x] Test session expiration notification (expired JWT redirects to signin)
+- [x] Test task CRUD operations with authentication (Phase II integration)
+- [x] Test multi-user data isolation (each user sees only their tasks)
+
+**Testing Status**: ✅ All authentication flows tested and verified (2025-12-15)
+
+**Notes**:
+- Dashboard route (`/dashboard`) has been replaced with `/tasks` as the main authenticated page
+- Session expiration properly redirects to `/signin?expired=true` with notification
+- Better Auth JWT tokens work seamlessly with FastAPI backend for task operations
+- Multi-user isolation confirmed: users cannot access other users' tasks
 
 ### Next Steps for Task CRUD Integration
 
